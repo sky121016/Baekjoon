@@ -1,31 +1,33 @@
+
+
+// 10773
 #include<iostream>
 #include<stack>
+
 using namespace std;
 
+int K;
+stack<int> s;
+int num;
+int sum;
+
 int main(){
-    int k;
-    cin>>k;
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
-    int a;
+    cin >> K;
 
-    stack<int> n;
-    for(int i = 0; i<k; i++){
-        cin>>a;
-        if(a==0){
-            n.pop();
+    for(int i = 0; i<K; i++){
+        cin >> num;
+        if(num == 0){
+            sum -= s.top();
+            s.pop();
         }else{
-            n.push(a);    
+            s.push(num);
+            sum += num;
         }
     }
-    int sum = 0;
 
-
-    while(!n.empty()){
-        sum += n.top();
-        n.pop();
-    }
-
-    cout<<sum<<endl;
+    cout << sum;
 }
-
-
