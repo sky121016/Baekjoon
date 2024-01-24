@@ -22,11 +22,13 @@ void Union(int x, int y){
     int py;
     px = Find(x);
     py = Find(y);
-
-    if(px != py){
-        p[py] = px;
-    }
     
+    
+    if(px < py){
+        p[py] = px;
+    }else{
+        p[px] = py;
+    }
 }
 
 bool check(int x, int y){
@@ -71,4 +73,3 @@ int main(){
         cout << ans<<"\n";
     }
 }
-
