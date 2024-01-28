@@ -1,86 +1,96 @@
-// 11052 카드 구매하기
-#include<iostream>
-#include<vector>
+// 15686
+#include <iostream>
+#include <vector>
+#include<queue>
 #include<algorithm>
+#include<cstdlib>
 #include<cmath>
+
 using namespace std;
 
-class Map{
+class Node{
 public:
     int x, y;
     int dis;
 
-    void setMap(int y, int x){
+    int value;
+    void setNode(int y, int x, int v){
         this->y = y;
         this->x = x;
+        value = v;
+
         dis = 101;
     }
 };
 
-vector<Map> home;
-vector<Map> chicken;
-vector<Map> selected;
-vector<int> ans;
-int N, M;
+int n, m;
+vector<Node> chicken;
+vector<Node> home;
+vector<Node> selected;
+vector<int> result;
 
+int tempDis = 101;
+int totalDis;
 
-
-void dfs(int value, int count){
-    int tempDis;
-    int tempSum = 0;
-
-    if(count == M){
-        for(int j = 0; j<home.size(); j++){
-            home[j].dis = 101;  // Dis 초기화
+void dfs(int idx, int cnt){
+    if(cnt == m){
+        for(int i = 0; i<home.size(); i++){
+            home[i].dis = 101;
         }
 
-        for(int i = 0; i < selected.size(); i++){
+        for(int i = 0; i<selected.size(); i++){
             for(int j = 0; j<home.size(); j++){
-                tempDis = abs(selected[i].y - home[j].y) + abs(selected[i].x - home[j].x);
+                tempDis = abs(selected[i].x - home[j].x) + abs(selected[i].y - home[j].y);
 
-                if(home[j].dis > tempDis){
+                if(tempDis < home[j].dis){
                     home[j].dis = tempDis;
                 }
-                tempSum += home[j].dis;
+                totalDis += home[j].dis;
             }
-            ans.push_back(tempSum);
-            tempSum = 0;
+            result.push_back(totalDis);
+            totalDis = 0;
         }
+     
+        return ;
 
-        return;
-        
     }else{
-        for(int i = value; i < chicken.size(); i++){
+        for(int i = idx; i<chicken.size(); i++){
             selected.push_back(chicken[i]);
-            dfs(i+1, count + 1);
+            dfs(i + 1, cnt + 1);
             selected.pop_back();
+
         }
     }
-}
 
+
+}
 
 
 
 int main(){
-    cin >> N >> M;
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
-    int value;
-    Map temp;
+    cin >> n >> m;
+    int temp;
+    Node tempNode;
 
-    for(int i = 0; i<N; i++){
-        for(int j = 0; j<N; j++){
-            cin >> value;
-            if(value == 1){          // home
-                temp.setMap(i, j);
-                home.push_back(temp);
-            }else if(value == 2){       // chicken
-                temp.setMap(i, j);
-                chicken.push_back(temp);
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<n; j++){
+            cin >> temp;
+            if(temp == 1){
+                tempNode.setNode(i, j, temp);
+                home.push_back(tempNode);
+            }else if(temp == 2){
+                tempNode.setNode(i, j, temp);
+                chicken.push_back(tempNode);
             }
-        }
+        }    
     }
 
     dfs(0, 0);
 
-    cout<<*min_element(ans.begin(), ans.end());
+    cout << *min_element(result.begin(), result.end());
 }
+
