@@ -3,44 +3,43 @@
 #include<vector>
 #include<queue>
 #include<algorithm>
+#include<string>
+
 using namespace std;
 
 int N;
 char map[65][65];
 char first;
-queue<char> q;
-bool flag = true;
 
 
-void quad(int n, int y, int x){
-    flag = true;
-    
-    if(n == 1){
-        q.push(map[y][x]);
-        return ;
-    }else{
-        first = map[y][x];
-        for(int i = 0; i<n; i++){
-            for(int j = 0; j<n; j++){
-                if(map[y+i][x+j] != first){
-                    flag = false;
-                    break;
-                }
+bool check(int y, int x, int n){
+    first = map[y][x];
+
+
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<n; j++){
+            if(map[y+i][x+j] != first){
+                return false;
             }
         }
-
-        if(flag == true){
-            q.push(first);
-            return;
-        }else{
-            q.push('(');
-            quad(n / 2, y, x);
-            quad(n / 2, y, x + n / 2);
-            quad(n / 2, y + n / 2, x);
-            quad(n / 2, y + n / 2, x + n / 2);
-        }
     }
-    q.push(')');
+
+    return true;
+}
+
+void quadtree(int y, int x, int n){
+
+    if(check(y, x, n)){
+        cout << map[y][x];
+        return;
+    }else{
+        cout<<"(";
+        quadtree(y, x, n / 2);
+        quadtree(y, x + n / 2, n / 2);
+        quadtree(y + n / 2, x, n / 2);
+        quadtree(y + n / 2, x + n / 2, n / 2);
+        cout<<")";
+    }
 
 }
 
@@ -51,20 +50,12 @@ int main(){
     cout.tie(NULL);
 
     cin >> N;
-
-
     for(int i = 0; i<N; i++){
         for(int j = 0; j<N; j++){
             cin >> map[i][j];
         }
     }
 
-
-    quad(N, 0, 0);
-
-    while(!q.empty()){
-        cout<<q.front();
-        q.pop();
-    }
-
+    quadtree(0, 0, N);
 }
+
