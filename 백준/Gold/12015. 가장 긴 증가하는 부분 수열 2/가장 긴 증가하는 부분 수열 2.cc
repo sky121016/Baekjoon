@@ -1,39 +1,35 @@
-// 2109
+// 12015
 #include<iostream>
 #include<vector>
 #include<queue>
 #include<algorithm>
+#include<string>
 #include<cmath>
+#include<stack>
+
 using namespace std;
 
 int n;
-int a[1010101];
-vector<int> R;
+vector<int> v;
+int l, r, m;
+int num[1010101];
 
-void BS(int num){
-    int l, r;
-    int m;
+void BS(int a){
+    l = 0;
+    r = v.size() - 1;
+    
+    while(l < r){
+        m = (l + r) / 2;
 
-    if(R.size() == 0 || R[R.size()-1]<num){
-        R.push_back(num);
-    }else{
-        l = 0;
-        r = R.size() - 1;
-
-
-        while(l<r){
-            m = (l + r) / 2;
-            if(num <= R[m]){
-                r = m;
-            }else{
-                l = m + 1;
-            }
+        if(a <= v[m]){
+            r = m;
+        }else{
+            l = m + 1;
         }
-
-        R[l] = num;
     }
+    v[l] = a;
+    
 }
-
 
 int main(){
     ios::sync_with_stdio(false);
@@ -42,14 +38,19 @@ int main(){
 
     cin >> n;
 
-    for(int i = 1; i<=n; i++){
-        cin >> a[i];
+    for(int i = 0; i<n; i++){
+        cin >> num[i];
     }
 
-    for(int i = 1; i<=n; i++){
-        BS(a[i]);
-    }
 
-    cout << R.size();
+    for(int i = 0; i<n; i++){
+        
+        if(v.empty() || v.back() < num[i]){
+            v.push_back(num[i]);
+        }else{
+            BS(num[i]);
+        }
+    }
+    cout << v.size();
 }
 
