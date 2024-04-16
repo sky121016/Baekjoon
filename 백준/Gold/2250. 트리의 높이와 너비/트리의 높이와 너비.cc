@@ -1,101 +1,80 @@
-// 2250 트리
 #include<iostream>
 #include<vector>
+#include<cmath>
 #include<algorithm>
+
 using namespace std;
 
-int n;
-
-class Node{
-public:
-    int num;
-    int left;
-    int right;
-    int width;
-
-    void setNode(int num, int l, int r){
-        this->num = num;
-        left = l;
-        right = r;
-        width = 0;
-    }
-};
-
-
-Node node[10001];
-vector<int> depth[10001];
-int maxWidth[10001];
-int cnt;                // 열 번호
-int level = 1;         
-int maxD;               // 최대 레벨
+int N;
+int nodes[10001][2];
+vector<int> level[10001];
+int cnt;
+bool in[10001];
+int root;
+int maxL;
 int ansLevel;
 int ansWidth;
-bool isNotRoot[10001];     // 루트 노드 찾기
-int root;
 
-void visit(int num){
+void findRoot(){
+    for (int i = 1; i <= N; i++){
+        if(!in[i]){
+            root = i;
+        }
+    }
+}
+
+void visit(int node, int l){
+    level[l].push_back(cnt);
     cnt++;
-    node[num].width = cnt;
-    depth[level].push_back(cnt); 
-    if(maxD < level){
-        maxD = level;
+    if(maxL < l){
+        maxL = l;
     }
-
 }
 
-void inorder(int num){
-    if(num == -1){
-        return;
-    }
-    level++;
-    inorder(node[num].left);
-    level--;
-    
-    visit(num);
-    
-    level++;
-    inorder(node[num].right);
-    level--;
-}
+void inorder(int node, int l){
 
+    if(nodes[node][0] != -1){
+        inorder(nodes[node][0], l + 1);
+    }
+    visit(node, l);
+    if (nodes[node][1] != -1){
+        inorder(nodes[node][1], l + 1);
+    }
+}
 
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
-    cin >> n;
+    cin >> N;
 
-    int num, left, right;
-    for(int i = 0; i<n; i++){
-        cin >> num >> left >> right;
-        node[num].setNode(num, left, right);
+    int temp, left, right;
+    for(int i = 0; i<N; i++){
+        cin >> temp >> left >> right;
+        nodes[temp][0] = left;
+        nodes[temp][1] = right;
         if(left != -1){
-            isNotRoot[left] = 1;
+            in[left] = true;
         }
         if(right != -1){
-            isNotRoot[right] = 1;
+            in[right] = true;
         }
     }
 
-    for(int i = 1; i<=n; i++){
-        if(isNotRoot[i] != 1){
-            root = i;
-        }
-    }
-
-    inorder(root);
+    cnt = 1;
+    findRoot();
+    inorder(root, 1);
 
 
-    for(int i = 1; i<=maxD; i++){
-        maxWidth[i] = *max_element(depth[i].begin(), depth[i].end()) - *min_element(depth[i].begin(), depth[i].end()) + 1;
-
-        if(ansWidth < maxWidth[i]){
+    int tempW = 0;
+    for(int i = 1; i<=maxL; i++){
+        tempW = *max_element(level[i].begin(), level[i].end()) - *min_element(level[i].begin(), level[i].end()) + 1;
+        if(ansWidth < tempW){
+            ansWidth = tempW;
             ansLevel = i;
-            ansWidth = maxWidth[i];
         }
     }
 
     cout << ansLevel << " " << ansWidth;
 }
-
