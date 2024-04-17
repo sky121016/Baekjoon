@@ -1,28 +1,14 @@
-// 12865 배낭
 #include<iostream>
 #include<vector>
 #include<algorithm>
+#include<queue>
+
 using namespace std;
 
 int N, K;
-int W[101];
-int V[1001];
-int dp[101][100001];
-
-
-void DP(){
-    for(int i = 1; i<=N; i++){
-        for(int j = 1; j<=K; j++){
-            if(W[i] <= j){
-                dp[i][j] = max(dp[i-1][j], dp[i-1][j-W[i]] + V[i]);         // max(이전 값 그대로, 이전 물건 빼고 현재 물건의 가치를 추가한 값)
-            }else{
-                dp[i][j] = dp[i-1][j];                                      // 이전 값 그대로
-            }
-
-        }
-    }
-}
-
+int dp[101][101010];
+vector<int> W;
+vector<int> V;
 
 int main(){
     ios::sync_with_stdio(false);
@@ -31,12 +17,29 @@ int main(){
 
     cin >> N >> K;
 
-    for(int i = 1; i<=N; i++){
-        cin >> W[i] >> V[i];
+    W.push_back(0);
+    V.push_back(0);
+
+    int w, v;
+    for(int i = 0; i < N; i++){
+        cin >> w >> v;
+        W.push_back(w);
+        V.push_back(v);
     }
 
-    DP();
+    for(int i = 1; i<=N; i++){
+        for(int j = 0; j<=K; j++){
+            dp[i][j] = dp[i-1][j];
 
-    cout<<dp[N][K];
+            if(j-W[i] >= 0){
+                dp[i][j] = max(dp[i - 1][j - W[i]] + V[i], dp[i][j]);
+            }
+        }
+    }
 
+
+
+    cout << dp[N][K];
 }
+
+
