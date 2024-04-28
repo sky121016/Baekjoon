@@ -1,6 +1,5 @@
 
 
-
 // 2254
 #include<iostream>
 #include<vector>
@@ -85,7 +84,7 @@ int main(){
             v[i].q = v[i].y - v[0].y;
         }
 
-        sort(++v.begin(), v.end());
+        sort(v.begin()+1, v.end());
 
         vector<Point> v2 = v;
         stack<int> s, backup;
@@ -150,7 +149,7 @@ int main(){
 
             v.clear();
 
-            for(auto iter = newV.begin(); iter!=newV.end(); iter++){
+            for(auto iter = newV.begin(); iter != newV.end(); iter++){
                 v.push_back(v2[(*iter)]);
             }
 
@@ -168,3 +167,4 @@ int main(){
 
     cout<<cnt;
 }
+
