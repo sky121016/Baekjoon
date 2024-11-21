@@ -1,56 +1,60 @@
-// 12015
-#include<iostream>
-#include<vector>
-#include<queue>
-#include<algorithm>
-#include<string>
-#include<cmath>
-#include<stack>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <stack>
+#include <iostream>
+#include <map>
 
 using namespace std;
 
 int n;
-vector<int> v;
-int l, r, m;
-int num[1010101];
+vector<int> a;
+vector<int> sorted;
 
-void BS(int a){
+
+void BS(int num){
+    int l, r, m;
+
     l = 0;
-    r = v.size() - 1;
-    
-    while(l < r){
+    r = sorted.size()-1;
+
+    while(l<r){
         m = (l + r) / 2;
 
-        if(a <= v[m]){
+        if(num <= sorted[m]){
             r = m;
         }else{
             l = m + 1;
         }
     }
-    v[l] = a;
     
+    sorted[l] = num;
+
 }
 
-int main(){
+
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
     cin >> n;
 
+    int temp;
     for(int i = 0; i<n; i++){
-        cin >> num[i];
+        cin >> temp;
+        a.push_back(temp);
     }
 
-
-    for(int i = 0; i<n; i++){
-        
-        if(v.empty() || v.back() < num[i]){
-            v.push_back(num[i]);
+    sorted.push_back(a[0]);
+    for(int i = 1; i<n; i++){
+        if(sorted.empty() || sorted.back() < a[i]){
+            sorted.push_back(a[i]);
         }else{
-            BS(num[i]);
+            BS(a[i]);
         }
     }
-    cout << v.size();
-}
 
+    cout << sorted.size();
+}
