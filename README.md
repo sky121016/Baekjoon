@@ -1,2 +1,2 @@
 # Baekjoon
-This is a auto push repository for Baekjoon Online Judge created with [BaekjoonHub](https://github.com/BaekjoonHub/BaekjoonHub).
+https://www.acmicpc.net/user/sky121016
