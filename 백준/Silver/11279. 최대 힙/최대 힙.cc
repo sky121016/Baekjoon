@@ -1,14 +1,15 @@
-// 11279
-#include <iostream>
-#include <vector>
-#include<queue>
+// 10814
+#include<iostream>
+#include<string>
+#include<vector>
 #include<algorithm>
+#include<queue>
 
 using namespace std;
 
-priority_queue<int> pq;
 int n;
-int temp;
+
+priority_queue<int> q;
 
 int main(){
     ios::sync_with_stdio(false);
@@ -17,18 +18,18 @@ int main(){
 
     cin >> n;
 
+    int x;
     for(int i = 0; i<n; i++){
-        cin >> temp;
-        if(temp != 0){
-            pq.push(temp);
-        }else{
-            if(!pq.empty()){
-                cout << pq.top() << "\n";
-                pq.pop();
-            }else{
+        cin >> x;
+        if(x==0){
+            if(q.empty()){
                 cout<<"0\n";
+            }else{
+                cout << q.top() << "\n";
+                q.pop();
             }
+        }else{
+            q.push(x);
         }
     }
 }
-
