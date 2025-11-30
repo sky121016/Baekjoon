@@ -1,75 +1,69 @@
-// 10866
+// 10814
 #include<iostream>
 #include<string>
+#include<vector>
+#include<algorithm>
+#include<deque>
 
 using namespace std;
 
-int d[20001];
-int head = 10000;
-int tail = 10001;
-string cmd;
-int N;
-int cnt;
-int num;
-
-bool isEmpty(){
-    if((tail - head) == 1){
-        return true;
-    }else{
-        return false;
-    }
-}
+int n;
+deque<int> s;
 
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
-    cin >> N;
+    cin >> n;
 
-    while(cnt < N){
+    string cmd;
+    int num;
+    for (int i = 0; i < n; i++){
         cin >> cmd;
-
         if(cmd == "push_front"){
             cin >> num;
-            d[head] = num;
-            head--;
+            s.push_front(num);
         }else if(cmd == "push_back"){
             cin >> num;
-            d[tail] = num;
-            tail++;
-        }else if(cmd == "pop_front"){
-            if(isEmpty()){
-                cout << "-1\n";
+            s.push_back(num);
+        }else if(cmd=="pop_front"){
+            if(!s.empty()){
+                cout<<s.front()<<"\n";
+                s.pop_front();
             }else{
-                cout << d[++head]<<"\n";
+                cout << "-1\n";
             }
         }else if(cmd == "pop_back"){
-            if(isEmpty()){
-                cout << "-1\n";
+            if(!s.empty()){
+                cout<<s.back()<<"\n";
+                s.pop_back();
             }else{
-                cout << d[--tail] << "\n";
-            }
-        }else if(cmd == "size"){
-            cout << tail - head - 1 << "\n";
-        }else if(cmd == "empty"){
-            cout << isEmpty() << "\n";
-        }else if(cmd == "front"){
-            if(isEmpty()){
                 cout << "-1\n";
-            }else{
-                cout << d[head + 1] << "\n";
             }
+        }else if(cmd=="front"){
+            if(s.empty()){
+                cout<<"-1";
+            }else{
+                cout << s.front();
+            }
+            cout<<"\n";
         }else if(cmd == "back"){
-            if(isEmpty()){
-                cout << "-1\n";
+            if(s.empty()){
+                cout<<"-1";
             }else{
-                cout << d[tail - 1] << "\n";
+                cout<<s.back();
             }
+            cout<<"\n";
+        }else if(cmd=="size"){
+            cout<< s.size()<<"\n";
+        }else if(cmd == "empty"){
+            if(s.empty()){
+                cout<<"1";
+            }else{
+                cout << "0";
+            }
+            cout << "\n";
         }
-
-        cnt++;
     }
-
 }
-
