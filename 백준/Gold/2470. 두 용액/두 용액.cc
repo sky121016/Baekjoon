@@ -1,54 +1,46 @@
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <queue>
-#include <stack>
-#include <iostream>
-#include <cstdlib>
-#include <map>
+// 15649
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<queue>
 
 using namespace std;
 
+
 int n;
-vector<long long> a;
+vector<int> a;
+int BASE = 1000000000;
 int l, r;
-long long first, second;
+int M, m;
+int sum = 2000000000;
+int tempSum;
 
-long long minVal;
-
-int main() {
+int main(){
     ios::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
-    cin >> n;
+    cin>>n;
 
-    long long temp;
+    int temp;
     for(int i = 0; i<n; i++){
-        cin >> temp;
-        a.push_back(temp);
+        cin>>temp;
+        a.push_back(temp+BASE);
     }
 
     sort(a.begin(), a.end());
 
     l = 0;
-    r = a.size()-1;
-
-    minVal = a[l] + a[r];
-    first = a[l];
-    second = a[r];
-
-    long long tempSum;
+    r = n-1;
 
     while(l<r){
-        tempSum = a[l] + a[r];
-        
-        if(abs(tempSum) <= abs(minVal)){
-            minVal = tempSum;
-            first = a[l];
-            second = a[r];
+        tempSum = a[l] - BASE + a[r] - BASE;
+        if(abs(tempSum) < abs(sum)){
+            sum = tempSum;
+            M = a[r]-BASE;
+            m = a[l]-BASE;
         }
-
 
         if(tempSum > 0){
             r--;
@@ -56,7 +48,9 @@ int main() {
             l++;
         }
     }
+    
 
-    cout << first << " " << second << "\n";
+    cout<<m<<" "<<M;
+
 }
 
