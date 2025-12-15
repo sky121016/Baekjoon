@@ -1,4 +1,3 @@
-// 네트워크
 #include <string>
 #include <vector>
 
