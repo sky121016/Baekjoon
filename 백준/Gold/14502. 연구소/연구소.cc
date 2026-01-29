@@ -1,160 +1,167 @@
-// 14502
+// 11053
 #include<iostream>
+#include<string>
 #include<vector>
-#include<queue>
-#include<stack>
 #include<algorithm>
-using namespace std;
+#include<queue>
 
+using namespace std;
 
 class Node{
 public:
     int y, x;
-    int value;
     bool visited;
-
+    int value;
+    bool virus;
 
     void setNode(int y, int x, int v){
         this->y = y;
         this->x = x;
         value = v;
         visited = false;
+        virus = false;
     }
 };
 
-
-int N, M;
+int n, m;
 Node node[9][9];
-Node nodeOrigin[9][9];
-int maxCnt;
-
 
 int dir[4][2] = {
-    {-1, 0},
-    {0, 1},
-    {1, 0},
-    {0, -1}
+    {-1, 0}, {0, 1}, {1, 0}, {0, -1}
 };
 
-
-
-int tempCnt;
-
 bool canVisit(int ny, int nx){
-    return (!node[ny][nx].visited && ny >= 0 && ny < N && nx >= 0 && nx < M && node[ny][nx].value == 0);
+    return(ny>=0 && ny<n && nx>=0 && nx<m && node[ny][nx].value == 0 && !node[ny][nx].visited);
+}
+
+vector<Node> s;
+int Maxarea = 0;
+int area;
+
+
+void reset(){
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<m; j++){
+            node[i][j].visited = false;
+            node[i][j].virus = false;
+        }
+    }
 }
 
 void bfs(Node& V){
     queue<Node> q;
-
     V.visited = true;
+    q.push(V);
 
     Node v;
     int ny, nx;
-    // tempCnt = 1;
-    
-    q.push(V);
 
     while(!q.empty()){
         v = q.front();
         q.pop();
 
-        for (int i = 0; i < 4; i++){
+        for(int i = 0; i<4; i++){
             ny = v.y + dir[i][0];
             nx = v.x + dir[i][1];
 
-
             if(canVisit(ny, nx)){
                 node[ny][nx].visited = true;
-                node[ny][nx].value = 2;
+                node[ny][nx].virus = true;
                 q.push(node[ny][nx]);
             }
         }
-
     }
-
-    // if(maxCnt < tempCnt){
-    //     maxCnt = tempCnt;
-    // }
 
 }
 
+void count(){
+    // for(int i = 0; i<n; i++){
+    //     for(int j = 0; j<m; j++){
+    //         cout<<node[i][j].value<<" ";
+    //     }
+    //     cout<<"\n";
+    // }
+    area = 0;
+
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<m; j++){
+            if(node[i][j].value == 0 && !node[i][j].virus){ // 영역 구하기
+                area++;
+            }
+        }
+    }
+
+
+}
+
+void spread(){
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<m; j++){
+            if(!node[i][j].visited && node[i][j].value == 2){ // 확산
+                bfs(node[i][j]);
+            }
+        }
+    }
+
+}
+
+
+void dfs(int x, int cnt){
+    if(cnt == 3){
+        spread();
+        count();
+        if(area>Maxarea){
+            Maxarea = area;
+        }
+
+        reset();
+    }else{
+        for(int i = x+1; i<n*m; i++){
+            int r = i/m;
+            int c = i%m;
+            if(node[r][c].value == 0){   
+                node[r][c].value = 1;
+                dfs(i, cnt+1);
+                node[r][c].value = 0;
+            }
+        }
+    }
+    
+}
 
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
-    cin >> N >> M;
 
+    // 3개 될때까지 어디다 세울지 골라. dfs
+    // 3개 됐으면 bfs로 확산시켜.
+    // 안전영역 구해.
+    // 최대 안전 영역보다 크면 갱신시켜
+
+    cin >> n >> m;
     int temp;
-    for(int i = 0; i<N; i++){
-        for(int j = 0; j<M; j++){
+
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<m; j++){
             cin >> temp;
             node[i][j].setNode(i, j, temp);
-            nodeOrigin[i][j].setNode(i, j, temp);
+        }
+    }
+
+    for(int i = 0; i<n*m; i++){
+        int r = i/m;
+        int c = i%m;
+        if(node[r][c].value == 0){
+            node[r][c].value = 1;
+            dfs(i, 1);
+            node[r][c].value = 0;
         }
     }
 
 
-    for(int i = 0; i<N*M; i++){
-        if(node[i/M][i%M].value == 0){
-
-            for(int j = i+1; j<N*M; j++){
-                if(node[j/M][j%M].value == 0){
-
-                    for(int k = j+1; k<N*M; k++){
-                        if(node[k/M][k%M].value == 0){
-
-                            node[i/M][i%M].value = 1;
-                            node[j/M][j%M].value = 1;
-                            node[k/M][k%M].value = 1;
-
-                            // virus 퍼트리기
-                            for(int y = 0; y < N; y++){
-                                for(int x = 0; x < M; x++){
-                                    if(node[y][x].value == 2){
-                                        bfs(node[y][x]);
-                                    }
-                                }
-                            }
+    cout<<Maxarea;
 
 
-                            tempCnt = 0;
-
-
-
-                            for(int y = 0; y < N; y++){
-                                for(int x = 0; x < M; x++){
-                                    if(node[y][x].value == 0){
-                                        tempCnt++;
-                                    }
-                                }
-                            }
-
-
-                            if(maxCnt<tempCnt){
-                                maxCnt = tempCnt;
-                            }
-
-
-                            for(int y = 0; y < N; y++){
-                                for(int x = 0; x < M; x++){
-                                    node[y][x].visited = false;
-                                    node[y][x].value = nodeOrigin[y][x].value;
-                                }
-                            }
-
-
-                        }
-
-                    }
-
-                }
-
-            } 
-        }
-    }
-
-    cout << maxCnt;
 }
