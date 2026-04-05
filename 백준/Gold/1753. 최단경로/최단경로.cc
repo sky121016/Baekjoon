@@ -1,55 +1,49 @@
-// 1753 최단경로
+// 11053
 #include<iostream>
-#include<algorithm>
+#include<string>
 #include<vector>
+#include<algorithm>
 #include<queue>
-#include<cstring>
+
 using namespace std;
 
 int V, E;
-int K;                      // 시작점
-
-int dist[20001];
-
-vector< pair<int, int> > Linked[20001];     // 가중치, 정점
-
+int K;
+vector<pair<int, int>> adj[20001];
 priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > > pq;
 
-void shortestPath(){
-    dist[K] = 0;
-    pq.push(make_pair(dist[K], K));     // 가중치, 도착정점
+int INF = 99999999;
+int dist[20001]; // k에서부터 거리
 
-    pair<int, int> v;                   // 현재 정점
-    int vIdx, vWei;
+void shortest(){
+    pair<int, int> v;
 
     while(!pq.empty()){
         v = pq.top();
         pq.pop();
 
-        vWei = v.first;
-        vIdx = v.second;
 
-        for(int i = 0; i < Linked[vIdx].size(); i++){
-            pair<int, int> next = Linked[vIdx][i];           // 다음 정점
-            int nextWei = Linked[vIdx][i].first;             // 다음 정점 가중치
-            int nextIdx = Linked[vIdx][i].second;            // 다음 정점 인덱스
+        for(int i = 0; i<adj[v.second].size(); i++){
+            int w = adj[v.second][i].first;     // v에서 도착지까지 가중치
+            int nIdx = adj[v.second][i].second; // 도착지
 
-            if (dist[vIdx] + nextWei < dist[nextIdx]){      // 현재까지의 거리 + 다음 정점까지의 가중치 < 다음 정점까지의 거리
-                dist[nextIdx] = dist[vIdx] + nextWei;
-                pq.push(make_pair(dist[nextIdx], nextIdx));
+            if(dist[nIdx] > dist[v.second] + w){
+                dist[nIdx] = dist[v.second] + w;
+                pq.push(make_pair(dist[nIdx],nIdx));
             }
         }
     }
 
+
     for(int i = 1; i<=V; i++){
-        if(dist[i] == 300001){
-            cout<<"INF"<<"\n";
+        if(dist[i] == INF){
+            cout<<"INF\n";
         }else{
             cout<<dist[i]<<"\n";
         }
     }
-
 }
+
 
 int main(){
     ios::sync_with_stdio(false);
@@ -57,20 +51,20 @@ int main(){
     cout.tie(NULL);
 
     cin >> V >> E;
-    cin >> K;           // 시작점
+    cin >> K;
+
+    for(int i = 1; i <= V; i++){
+        dist[i] = INF;
+    }
+    dist[K] = 0;
 
     int u, v, w;
-
-    for(int i = 1; i<=V; i++){
-        dist[i] = 300001;
-    }
-
-    for(int i = 1; i<=E; i++){
+    for(int i = 0; i<E; i++){
         cin >> u >> v >> w;
-        Linked[u].push_back(make_pair(w,v));    // 연결리스트
+        adj[u].push_back(make_pair(w, v));
     }
 
-    shortestPath();
+    pq.push(make_pair(0, K));
 
-
+    shortest();
 }
